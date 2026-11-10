@@ -47,9 +47,15 @@ export class SyncService {
     const backupKey = env.GEMINI_API_KEY_BACKUP;
 
     const seenInBatch = new Set<string>();
+    const MAX_TOTAL_NEW = 10; // Curate top 10 facts per batch
+    const MAX_PER_SOURCE = 2; // Up to 2 best facts per source for balanced variety
 
     // 3. Collect from each source
     for (const source of sources.results) {
+      if (queued >= MAX_TOTAL_NEW) {
+        break; // Reached curated daily target
+      }
+
       try {
         let collected: CollectedItem[] = [];
 
@@ -63,8 +69,21 @@ export class SyncService {
 
         found += collected.length;
 
-        // Process each collected item
-        for (const item of collected) {
+        // Quality Filter: Prioritize items with HD images and meaningful content
+        const qualityItems = collected.filter((item) => {
+          const hasImage = Boolean(item.imageUrl && item.imageUrl.trim());
+          const hasGoodLength = item.text && item.text.length >= 80;
+          return hasImage && hasGoodLength;
+        });
+
+        let sourceAdded = 0;
+
+        // Process top quality items from this source
+        for (const item of qualityItems) {
+          if (sourceAdded >= MAX_PER_SOURCE || queued >= MAX_TOTAL_NEW) {
+            break;
+          }
+
           if (!item.externalId || seenInBatch.has(item.externalId)) {
             continue;
           }
@@ -82,6 +101,7 @@ export class SyncService {
           }
 
           newItems++;
+          sourceAdded++;
 
           let mizoTitle = '';
           let mizoCaption = '';
