@@ -46,6 +46,8 @@ export class SyncService {
     const geminiKey2 = env.GEMINI_API_KEY_FALLBACK || env.GEMINI_API_KEY_2;
     const backupKey = env.GEMINI_API_KEY_BACKUP;
 
+    const seenInBatch = new Set<string>();
+
     // 3. Collect from each source
     for (const source of sources.results) {
       try {
@@ -63,7 +65,12 @@ export class SyncService {
 
         // Process each collected item
         for (const item of collected) {
-          // Check deduplication
+          if (!item.externalId || seenInBatch.has(item.externalId)) {
+            continue;
+          }
+          seenInBatch.add(item.externalId);
+
+          // Check deduplication in database
           const existing = await env.DB.prepare(
             `SELECT id FROM posts WHERE external_id = ? LIMIT 1`
           )
@@ -106,9 +113,9 @@ export class SyncService {
             }
           }
 
-          // Insert into posts table
+          // Insert into posts table (INSERT OR IGNORE ensures 0 collision errors)
           await env.DB.prepare(
-            `INSERT INTO posts (
+            `INSERT OR IGNORE INTO posts (
               source_id, source_type, external_id, original_title, original_text,
               original_url, image_url, mizo_title, mizo_caption, category,
               status, scheduled_for, created_at, updated_at
