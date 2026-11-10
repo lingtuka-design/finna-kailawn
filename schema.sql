@@ -70,7 +70,7 @@ INSERT OR IGNORE INTO sources (id, name, type, url, avatar_url, category, enable
 INSERT OR IGNORE INTO settings (key, value) VALUES
 ('auto_publish_enabled', 'true'),
 ('auto_translate_on_sync', 'true'),
-('drip_schedule_times', '09:00,13:00,17:00,21:00'),
-('drip_interval_hours', '4'),
+('drip_schedule_times', '08:00,11:00,14:00,17:00,20:00,23:00'),
+('drip_interval_hours', '3'),
 ('post_hashtags', '#FinnaKailawn #Thilmak #Facts #Science #Discoveries #History'),
 ('system_timezone', 'Asia/Kolkata');

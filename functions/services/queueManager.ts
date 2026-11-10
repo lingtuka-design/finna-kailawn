@@ -7,8 +7,8 @@ export class QueueManager {
    */
   public async getNextScheduleTime(
     db: D1Database,
-    preferredIntervalHours = 4,
-    scheduleSlots = ['09:00', '13:00', '17:00', '21:00']
+    preferredIntervalHours = 3,
+    scheduleSlots = ['08:00', '11:00', '14:00', '17:00', '20:00', '23:00']
   ): Promise<string> {
     // 1. Find the latest scheduled post in queue
     const latestQueued = await db

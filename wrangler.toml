@@ -12,5 +12,5 @@ database_id = "4c54c9bf-e8d4-4cd9-b7b9-b8b48992f21a"
 [vars]
 SITE_NAME = "Finna Kailawn"
 TIMEZONE = "Asia/Kolkata"
-DEFAULT_INTERVAL_HOURS = "4"
-SCHEDULE_HOURS = "9,13,17,21"
+DEFAULT_INTERVAL_HOURS = "3"
+SCHEDULE_HOURS = "8,11,14,17,20,23"
