@@ -30,11 +30,11 @@ export class GeminiStoryteller {
       // Fallback if no Gemini key is configured yet
       return {
         mizoTitle: title,
-        mizoCaption: `${title}\n\n${englishText}\n\n#KhawvelXtra #Thilmak #Facts`,
+        mizoCaption: `${title}\n\n${englishText}\n\n#FinnaKailawn #Thilmak #Facts`,
       };
     }
 
-    const systemPrompt = `You are the lead storyteller and creative Mizo editor for "Khawvel Xtra", a popular Mizo page focusing on amazing world facts, scientific discoveries, nature wonders, history, and space mysteries.
+    const systemPrompt = `You are the lead storyteller and creative Mizo editor for "Finna Kailawn", a popular Mizo page focusing on amazing world facts, scientific discoveries, nature wonders, history, and space mysteries.
 
 Your goal is to transform English facts, research papers, or discovery summaries into captivating, natural, and fluent Mizo storytelling that everyday readers love.
 
@@ -55,7 +55,7 @@ CRITICAL MIZO GRAMMAR & STYLE RULES:
 
 3. CLEAN HASHTAGS:
    - Conclude naturally with relevant hashtags:
-     #KhawvelXtra #Thilmak #Facts #${category.toUpperCase()} #Science #Discoveries
+     #FinnaKailawn #Thilmak #Facts #${category.toUpperCase()} #Science #Discoveries
 
 4. ZERO EXTERNAL LINKS:
    - NEVER include external URLs or website links in the caption (Meta algorithm penalizes external links in captions).
@@ -149,7 +149,7 @@ Generate the Mizo title and storytelling caption in JSON format now:`;
     // Ultimate fallback if API fails
     return {
       mizoTitle: title,
-      mizoCaption: `Khawvel Thilmak:\n\n${title}\n\n${englishText.slice(0, 400)}...\n\n#KhawvelXtra #Thilmak #Facts`,
+      mizoCaption: `Khawvel Thilmak:\n\n${title}\n\n${englishText.slice(0, 400)}...\n\n#FinnaKailawn #Thilmak #Facts`,
     };
   }
 }

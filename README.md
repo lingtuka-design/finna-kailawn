@@ -1,6 +1,6 @@
-# Khawvel Xtra 🌍
+# Finna Kailawn 🌍
 
-**Khawvel Xtra** is an automated content curation, Mizo storytelling, review, and publishing platform for a Mizo Facebook page focusing on global facts, science, nature wonders, history, and space discoveries.
+**Finna Kailawn** is an automated content curation, Mizo storytelling, review, and publishing platform for a Mizo Facebook page focusing on global facts, science, nature wonders, history, and space discoveries.
 
 Deployed independently on **Cloudflare Pages** (with **Cloudflare D1 Database** and **Scheduled Cron Worker**).
 
@@ -21,7 +21,7 @@ Deployed independently on **Cloudflare Pages** (with **Cloudflare D1 Database** 
    - Uses Google Gemini API (`gemini-2.5-flash`, `gemini-1.5-flash`, `gemini-2.0-flash`).
    - Paraphrases and writes fluent, natural Mizo captions (avoiding stiff machine translation).
    - Catchy opening hooks ("I lo hre ve tawh em? 🌍", "Khawvel Thilmak:", "Hriatzauna:", "I hria em?").
-   - Clean concluding hashtags (`#KhawvelXtra #Thilmak #Facts #Science`).
+   - Clean concluding hashtags (`#FinnaKailawn #Thilmak #Facts #Science`).
    - Strictly zero external links in captions for optimal Facebook organic algorithm reach.
 
 3. **Drip Queue & Automated Scheduler**:

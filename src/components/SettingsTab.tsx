@@ -16,7 +16,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
     auto_translate_on_sync: settingsState.settings.auto_translate_on_sync ?? 'true',
     drip_interval_hours: settingsState.settings.drip_interval_hours ?? '4',
     drip_schedule_times: settingsState.settings.drip_schedule_times ?? '09:00,13:00,17:00,21:00',
-    post_hashtags: settingsState.settings.post_hashtags ?? '#KhawvelXtra #Thilmak #Facts #Science #Discoveries #History',
+    post_hashtags: settingsState.settings.post_hashtags ?? '#FinnaKailawn #Thilmak #Facts #Science #Discoveries #History',
     gemini_api_key: settingsState.settings.gemini_api_key ?? '',
     fb_page_id: settingsState.settings.fb_page_id ?? '',
     fb_access_token: settingsState.settings.fb_access_token ?? '',

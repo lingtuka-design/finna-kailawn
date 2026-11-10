@@ -1,4 +1,4 @@
--- Cloudflare D1 Database Schema for Khawvel Xtra
+-- Cloudflare D1 Database Schema for Finna Kailawn
 
 CREATE TABLE IF NOT EXISTS sources (
   id TEXT PRIMARY KEY,
@@ -72,5 +72,5 @@ INSERT OR IGNORE INTO settings (key, value) VALUES
 ('auto_translate_on_sync', 'true'),
 ('drip_schedule_times', '09:00,13:00,17:00,21:00'),
 ('drip_interval_hours', '4'),
-('post_hashtags', '#KhawvelXtra #Thilmak #Facts #Science #Discoveries #History'),
+('post_hashtags', '#FinnaKailawn #Thilmak #Facts #Science #Discoveries #History'),
 ('system_timezone', 'Asia/Kolkata');

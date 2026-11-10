@@ -68,7 +68,7 @@ export const SourcesTab: React.FC<SourcesTabProps> = ({
             Curated Content Sources
           </h2>
           <p className="text-xs text-muted-foreground">
-            Feeds, APIs, and Twitter channels that Khawvel Xtra monitors for high-quality facts.
+            Feeds, APIs, and Twitter channels that Finna Kailawn monitors for high-quality facts.
           </p>
         </div>
 

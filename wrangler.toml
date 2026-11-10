@@ -1,4 +1,4 @@
-name = "khawvel-xtra"
+name = "finna-kailawn"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-04-01"
 
@@ -10,7 +10,7 @@ database_id = "khawvel-db"
 
 # Environment Variables & Default Settings
 [vars]
-SITE_NAME = "Khawvel Xtra"
+SITE_NAME = "Finna Kailawn"
 TIMEZONE = "Asia/Kolkata"
 DEFAULT_INTERVAL_HOURS = "4"
 SCHEDULE_HOURS = "9,13,17,21"
