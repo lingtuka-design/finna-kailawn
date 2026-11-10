@@ -5,8 +5,8 @@ compatibility_date = "2026-04-01"
 # Cloudflare D1 Database Binding
 [[d1_databases]]
 binding = "DB"
-database_name = "khawvel-db"
-database_id = "khawvel-db"
+database_name = "finna-kailawn-db"
+database_id = "4c54c9bf-e8d4-4cd9-b7b9-b8b48992f21a"
 
 # Environment Variables & Default Settings
 [vars]
@@ -14,10 +14,3 @@ SITE_NAME = "Finna Kailawn"
 TIMEZONE = "Asia/Kolkata"
 DEFAULT_INTERVAL_HOURS = "4"
 SCHEDULE_HOURS = "9,13,17,21"
-
-# Required Secrets to set via `wrangler secret put <KEY>` or Cloudflare Pages Dashboard:
-# 1. GEMINI_API_KEY       -> From Google AI Studio (Free Tier)
-# 2. FB_PAGE_ACCESS_TOKEN -> Meta Graph API Page Access Token (never-expiring page token)
-# 3. FB_PAGE_ID           -> Facebook Page ID (e.g. 1000892348234)
-# 4. CRON_SECRET          -> Secret token to protect manual or scheduled /api/sync triggers
-# 5. NASA_API_KEY         -> Optional (defaults to DEMO_KEY if not provided)
