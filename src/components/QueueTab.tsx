@@ -144,54 +144,54 @@ export const QueueTab: React.FC<QueueTabProps> = ({
                   </div>
 
                   {/* Title & Caption */}
-                  <h3 className="text-sm font-semibold text-foreground mb-2 line-clamp-2">
+                  <h3 className="text-base sm:text-lg font-bold text-white mb-2 line-clamp-2 leading-snug">
                     {post.mizo_title || post.original_title || 'Untitled Fact'}
                   </h3>
 
-                  <div className="bg-secondary/40 rounded-lg p-3 border border-border/40 text-xs text-foreground/90 whitespace-pre-line leading-relaxed font-sans max-h-36 overflow-y-auto mb-3">
+                  <div className="bg-[#161925] rounded-xl p-4 border border-[#272d40] text-sm sm:text-base text-slate-100 whitespace-pre-line leading-relaxed font-sans max-h-48 overflow-y-auto mb-3 shadow-inner">
                     {post.mizo_caption || post.original_text}
                   </div>
                 </div>
 
                 {/* Card footer actions */}
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border/50">
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#23283a]">
                   <div className="flex items-center gap-2">
                     {post.original_url && (
                       <a
                         href={post.original_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-blue-400 transition-colors"
+                        className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-slate-400 hover:text-blue-400 transition-colors"
                       >
-                        <ExternalLink className="w-3 h-3" />
+                        <ExternalLink className="w-3.5 h-3.5" />
                         <span>Source Link</span>
                       </a>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2.5">
                     <button
                       onClick={() => onEdit(post)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium bg-secondary hover:bg-secondary/80 text-foreground border border-border transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-[#202538] hover:bg-[#2c334d] text-white border border-[#2d354d] transition-colors shadow-sm"
                     >
-                      <Edit3 className="w-3 h-3" />
-                      <span>Edit & Retranslate</span>
+                      <Edit3 className="w-3.5 h-3.5 text-blue-400" />
+                      <span>Edit & Polish</span>
                     </button>
 
                     <button
                       onClick={() => onDelete(post.id)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium text-destructive hover:bg-destructive/10 border border-transparent hover:border-destructive/20 transition-colors"
+                      className="p-2 rounded-lg text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-colors"
                       title="Remove from queue"
                     >
-                      <Trash2 className="w-3 h-3" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
 
                     <button
                       onClick={() => handlePublish(post.id)}
                       disabled={publishingId === post.id}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-blue-600 hover:bg-blue-500 text-white shadow-sm transition-colors disabled:opacity-60"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-500 text-white shadow-md transition-colors disabled:opacity-60"
                     >
-                      <Send className={`w-3 h-3 ${publishingId === post.id ? 'animate-pulse' : ''}`} />
+                      <Send className={`w-3.5 h-3.5 ${publishingId === post.id ? 'animate-pulse' : ''}`} />
                       <span>{publishingId === post.id ? 'Publishing...' : 'Publish Now'}</span>
                     </button>
                   </div>
