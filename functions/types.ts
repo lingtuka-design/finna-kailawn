@@ -3,6 +3,7 @@ export interface Env {
   GEMINI_API_KEY?: string;
   GEMINI_API_KEY_2?: string;
   GEMINI_API_KEY_FALLBACK?: string;
+  GEMINI_API_KEY_BACKUP?: string;
   FB_PAGE_ID?: string;
   FB_PAGE_ACCESS_TOKEN?: string;
   CRON_SECRET?: string;

@@ -1,13 +1,14 @@
 import { StorytellerResult } from '../types';
 
 export class GeminiStoryteller {
-  // Model fallback chain: tries cutting-edge flash models down to reliable fallbacks
+  // Model fallback chain: uses current active models with graceful fallback
   private modelChain = [
-    'gemini-2.5-flash',
-    'gemini-1.5-flash',
-    'gemini-2.0-flash',
-    'gemini-flash-latest',
     'gemini-3.5-flash-lite',
+    'gemini-flash-lite-latest',
+    'gemini-3.8-flash',
+    'gemini-3.5-flash',
+    'gemini-3.1-flash-lite',
+    'gemini-flash-latest',
   ];
 
   /**
@@ -19,11 +20,13 @@ export class GeminiStoryteller {
     category: string = 'facts',
     primaryKey?: string,
     fallbackKey?: string,
-    customPrompt?: string
+    customPrompt?: string,
+    extraKey?: string
   ): Promise<StorytellerResult> {
     const keys = [
       (primaryKey || '').trim(),
       (fallbackKey || '').trim(),
+      (extraKey || '').trim(),
     ].filter(Boolean);
 
     if (keys.length === 0) {

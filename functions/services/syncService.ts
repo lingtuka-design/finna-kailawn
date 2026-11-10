@@ -43,7 +43,8 @@ export class SyncService {
     const intervalHours = parseInt(intervalSetting?.value || '4', 10) || 4;
 
     const geminiKey = env.GEMINI_API_KEY;
-    const geminiKey2 = env.GEMINI_API_KEY_2 || env.GEMINI_API_KEY_FALLBACK;
+    const geminiKey2 = env.GEMINI_API_KEY_FALLBACK || env.GEMINI_API_KEY_2;
+    const backupKey = env.GEMINI_API_KEY_BACKUP;
 
     // 3. Collect from each source
     for (const source of sources.results) {
@@ -80,14 +81,16 @@ export class SyncService {
           let status: 'draft' | 'queued' = 'draft';
           let scheduledFor: string | null = null;
 
-          if (shouldAutoTranslate && geminiKey) {
+          if (shouldAutoTranslate && (geminiKey || backupKey)) {
             try {
               const translated = await geminiStoryteller.tellStory(
                 item.title,
                 item.text,
                 item.category,
                 geminiKey,
-                geminiKey2
+                geminiKey2,
+                undefined,
+                backupKey
               );
               mizoTitle = translated.mizoTitle || item.title;
               mizoCaption = translated.mizoCaption;

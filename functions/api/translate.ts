@@ -34,7 +34,8 @@ export const onRequestPost = async (context: PagesFunctionContext): Promise<Resp
     }
 
     const geminiKey = env.GEMINI_API_KEY;
-    const geminiKey2 = env.GEMINI_API_KEY_2 || env.GEMINI_API_KEY_FALLBACK;
+    const geminiKey2 = env.GEMINI_API_KEY_FALLBACK || env.GEMINI_API_KEY_2;
+    const backupKey = env.GEMINI_API_KEY_BACKUP;
 
     // Check if key is also saved in settings
     let keyToUse = geminiKey;
@@ -43,7 +44,7 @@ export const onRequestPost = async (context: PagesFunctionContext): Promise<Resp
       keyToUse = setting?.value;
     }
 
-    if (!keyToUse) {
+    if (!keyToUse && !backupKey) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -62,7 +63,8 @@ export const onRequestPost = async (context: PagesFunctionContext): Promise<Resp
       targetCategory,
       keyToUse,
       geminiKey2,
-      customInstruction
+      customInstruction,
+      backupKey
     );
 
     // If a postId was provided, update it in DB
