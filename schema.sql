@@ -61,7 +61,7 @@ INSERT OR IGNORE INTO sources (id, name, type, url, avatar_url, category, enable
 ('livescience', 'LiveScience', 'rss', 'https://www.livescience.com/feeds/all', 'https://cdn.mos.cms.futurecdn.net/76W8Jz6x72rJk5rPzU4N4D.png', 'science', 1),
 ('sciencealert', 'ScienceAlert', 'rss', 'https://www.sciencealert.com/feed', 'https://www.sciencealert.com/images/favicon.ico', 'science', 1),
 ('bbc_science', 'BBC Science & Nature', 'rss', 'https://feeds.bbci.co.uk/news/science_and_environment/rss.xml', 'https://news.bbcimg.co.uk/nol/shared/img/bbc_news_120x60.gif', 'nature', 1),
-('nasa_apod', 'NASA APOD (Picture of the Day)', 'nasa', 'https://api.nasa.gov/planetary/apod', 'https://science.nasa.gov/wp-content/themes/nasa-child/assets/images/nasa-logo@2x.png', 'space', 1),
+('nasa_apod', 'NASA APOD (Picture of the Day)', 'nasa', 'https://api.nasa.gov/planetary/apod', 'https://science.nasa.gov/wp-content/themes/nasa-child/assets/images/nasa-logo@2x.png', 'space', 0),
 ('twitter_fasc1nate', 'fasc1nate (@fasc1nate)', 'twitter', 'fasc1nate', 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png', 'history', 1),
 ('twitter_Rainmaker1973', 'Massimo (@Rainmaker1973)', 'twitter', 'Rainmaker1973', 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png', 'science', 1),
 ('twitter_HistoryInPics', 'History In Pictures (@HistoryInPics)', 'twitter', 'HistoryInPics', 'https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png', 'history', 1);

@@ -82,10 +82,17 @@ Your task is to transform global science breakthroughs, nature wonders, space di
   - #FinnaKailawn #Thilmak #Science #Facts #Khawvel #${category.toUpperCase()} #Discoveries
 - Post chhungah external link (spam link) dah miah loh tur (Facebook organic reach a tihhniam loh nan).
 
+==================================================
+CRITICAL LANGUAGE REQUIREMENT:
+- Both "mizo_title" and "mizo_caption" MUST be 100% written in fluent, authentic Mizo.
+- NEVER leave "mizo_title" in English. Paraphrase/translate the title into a captivating Mizo headline.
+- If the original title is a question or statement in English, convert it into an engaging Mizo headline.
+==================================================
+
 Return valid JSON with:
 {
-  "mizo_title": "<Short, punchy Mizo headline (1 line)>",
-  "mizo_caption": "<Complete Mizo Facebook caption with hook, storytelling paragraphs, and concluding hashtags>"
+  "mizo_title": "<Short, punchy Mizo headline in fluent Mizo (1 line, NEVER English)>",
+  "mizo_caption": "<Complete Mizo Facebook caption with hook, storytelling paragraphs, and concluding hashtags. NEVER English>"
 }`;
 
     const userPrompt = `Category: ${category}
@@ -94,7 +101,7 @@ Original Content:
 ${englishText}
 ${customPrompt ? `\nSpecial User Instruction: ${customPrompt}` : ''}
 
-Generate the Mizo title and storytelling caption in JSON format now:`;
+Generate the Mizo title and storytelling caption in JSON format now (Title and Caption MUST be in authentic Mizo):`;
 
     const contents = [
       {
