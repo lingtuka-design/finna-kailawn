@@ -28,16 +28,12 @@ export const onRequestPost = async (context: PagesFunctionContext): Promise<Resp
       });
     }
 
-    // Facebook credentials from env or DB
-    let fbPageId = env.FB_PAGE_ID;
-    let fbAccessToken = env.FB_PAGE_ACCESS_TOKEN;
+    // Facebook credentials: Check DB settings first (allows real-time updates via UI), fallback to env secrets
+    const idSetting = await env.DB.prepare(`SELECT value FROM settings WHERE key = 'fb_page_id'`).first<{ value: string }>();
+    const tokenSetting = await env.DB.prepare(`SELECT value FROM settings WHERE key = 'fb_access_token'`).first<{ value: string }>();
 
-    if (!fbPageId || !fbAccessToken) {
-      const idSetting = await env.DB.prepare(`SELECT value FROM settings WHERE key = 'fb_page_id'`).first<{ value: string }>();
-      const tokenSetting = await env.DB.prepare(`SELECT value FROM settings WHERE key = 'fb_access_token'`).first<{ value: string }>();
-      if (idSetting?.value) fbPageId = idSetting.value;
-      if (tokenSetting?.value) fbAccessToken = tokenSetting.value;
-    }
+    let fbPageId = idSetting?.value?.trim() || env.FB_PAGE_ID;
+    let fbAccessToken = tokenSetting?.value?.trim() || env.FB_PAGE_ACCESS_TOKEN;
 
     if (!fbPageId || !fbAccessToken) {
       return new Response(
