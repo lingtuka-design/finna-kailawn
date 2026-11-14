@@ -48,7 +48,7 @@ export class SyncService {
 
     const seenInBatch = new Set<string>();
     const MAX_TOTAL_NEW = 10; // Curate top 10 facts per batch
-    const MAX_PER_SOURCE = 2; // Up to 2 best facts per source for balanced variety
+    const MAX_PER_SOURCE = 3; // Up to 3 best facts per source for balanced variety and full 10-item batch
     const candidateItems: CollectedItem[] = [];
 
     // 3. Step 1: Collect top quality candidate items across active sources

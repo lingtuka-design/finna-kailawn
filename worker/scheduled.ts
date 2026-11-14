@@ -40,8 +40,10 @@ export default {
         })
     );
 
-    // 2. Source Sync: Runs every 30 minutes (minute % 30 === 0) to collect fresh facts/discoveries
-    if (minute % 30 === 0) {
+    // 2. Daily Source Sync: Runs every morning at 06:00 AM IST (00:30 UTC)
+    // Curates exactly 10 top-tier facts and translates them in ONE single Gemini 4 Hydrogen batch call
+    const isDailySyncTime = scheduledDate.getUTCHours() === 0 && minute === 30;
+    if (isDailySyncTime) {
       ctx.waitUntil(
         fetch(`${baseUrl}/api/sync?mode=sync_only`, {
           method: 'POST',
@@ -49,10 +51,10 @@ export default {
         })
           .then(async (res) => {
             const body = await res.text();
-            console.log(`[Khawvel Cron] Periodic Source Sync: HTTP ${res.status} - ${body.slice(0, 100)}`);
+            console.log(`[Khawvel Cron] Daily Source Sync (06:00 AM IST): HTTP ${res.status} - ${body.slice(0, 100)}`);
           })
           .catch((err) => {
-            console.error('[Khawvel Cron] Source sync error:', err.message);
+            console.error('[Khawvel Cron] Daily source sync error:', err.message);
           })
       );
     }

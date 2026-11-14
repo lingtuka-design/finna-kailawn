@@ -143,6 +143,12 @@ export class RssCollector {
     let clean = url.trim();
     // Decode HTML entities in url if any (e.g. &amp; -> &)
     clean = clean.replace(/&amp;/g, '&');
+
+    // Upgrade BBC images from low-res thumbnails (/240/) to crisp high-res (/976/)
+    if (clean.includes('ichef.bbci.co.uk')) {
+      clean = clean.replace(/\/standard\/\d+\//i, '/standard/976/');
+    }
+
     return clean;
   }
 
