@@ -211,9 +211,12 @@ export const App: React.FC = () => {
           status: updates.status,
         }),
       });
-      if (res.ok) {
-        notify('Post updated');
+      const data = (await res.json().catch(() => ({}))) as any;
+      if (res.ok && data.success) {
+        notify('Post updated successfully');
         await fetchPosts();
+      } else {
+        notify('Save failed: ' + (data.error || 'Server error'), 'error');
       }
     } catch (err: any) {
       notify('Save failed: ' + err.message, 'error');

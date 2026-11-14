@@ -150,18 +150,49 @@ export const onRequestPut = async (context: PagesFunctionContext): Promise<Respo
       });
     }
 
+    // Build dynamic UPDATE query (sanitizes undefined to prevent D1_TYPE_ERROR)
+    const updates: string[] = [];
+    const params: any[] = [];
+
+    if (mizoTitle !== undefined) {
+      updates.push('mizo_title = ?');
+      params.push(mizoTitle);
+    }
+    if (mizoCaption !== undefined) {
+      updates.push('mizo_caption = ?');
+      params.push(mizoCaption);
+    }
+    if (imageUrl !== undefined) {
+      updates.push('image_url = ?');
+      params.push(imageUrl);
+    }
+    if (status !== undefined) {
+      updates.push('status = ?');
+      params.push(status);
+    }
+    if (scheduledFor !== undefined) {
+      updates.push('scheduled_for = ?');
+      params.push(scheduledFor);
+    }
+    if (category !== undefined) {
+      updates.push('category = ?');
+      params.push(category);
+    }
+
+    if (updates.length === 0) {
+      return new Response(JSON.stringify({ success: true, message: 'No fields to update' }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      });
+    }
+
+    updates.push('updated_at = CURRENT_TIMESTAMP');
+    params.push(id);
+
     await env.DB.prepare(
-      `UPDATE posts 
-       SET mizo_title = COALESCE(?, mizo_title),
-           mizo_caption = COALESCE(?, mizo_caption),
-           image_url = COALESCE(?, image_url),
-           status = COALESCE(?, status),
-           scheduled_for = COALESCE(?, scheduled_for),
-           category = COALESCE(?, category),
-           updated_at = CURRENT_TIMESTAMP
-       WHERE id = ?`
+      `UPDATE posts SET ${updates.join(', ')} WHERE id = ?`
     )
-      .bind(mizoTitle, mizoCaption, imageUrl, status, scheduledFor, category, id)
+      .bind(...params)
       .run();
 
     return new Response(JSON.stringify({ success: true, message: 'Post updated successfully' }), {
