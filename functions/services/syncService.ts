@@ -1,4 +1,4 @@
-import { Env, CollectedItem, SourceRecord } from '../types';
+import { Env, CollectedItem, SourceRecord, StorytellerResult } from '../types';
 import { rssCollector } from './rssCollector';
 import { nasaCollector } from './nasaCollector';
 import { twitterCollector } from './twitterCollector';
@@ -49,10 +49,11 @@ export class SyncService {
     const seenInBatch = new Set<string>();
     const MAX_TOTAL_NEW = 10; // Curate top 10 facts per batch
     const MAX_PER_SOURCE = 2; // Up to 2 best facts per source for balanced variety
+    const candidateItems: CollectedItem[] = [];
 
-    // 3. Collect from each source
+    // 3. Step 1: Collect top quality candidate items across active sources
     for (const source of sources.results) {
-      if (queued >= MAX_TOTAL_NEW) {
+      if (candidateItems.length >= MAX_TOTAL_NEW) {
         break; // Reached curated daily target
       }
 
@@ -78,9 +79,9 @@ export class SyncService {
 
         let sourceAdded = 0;
 
-        // Process top quality items from this source
+        // Filter and collect candidate items
         for (const item of qualityItems) {
-          if (sourceAdded >= MAX_PER_SOURCE || queued >= MAX_TOTAL_NEW) {
+          if (sourceAdded >= MAX_PER_SOURCE || candidateItems.length >= MAX_TOTAL_NEW) {
             break;
           }
 
@@ -100,62 +101,9 @@ export class SyncService {
             continue; // Already processed
           }
 
-          newItems++;
+          candidateItems.push(item);
           sourceAdded++;
-
-          let mizoTitle = '';
-          let mizoCaption = '';
-          let status: 'draft' | 'queued' = 'draft';
-          let scheduledFor: string | null = null;
-
-          if (shouldAutoTranslate && (geminiKey || backupKey)) {
-            try {
-              const translated = await geminiStoryteller.tellStory(
-                item.title,
-                item.text,
-                item.category,
-                geminiKey,
-                geminiKey2,
-                undefined,
-                backupKey
-              );
-              mizoTitle = translated.mizoTitle || item.title;
-              mizoCaption = translated.mizoCaption;
-              status = 'queued';
-
-              scheduledFor = await queueManager.getNextScheduleTime(env.DB, intervalHours);
-              queued++;
-            } catch (err: any) {
-              console.warn(`[SyncService] Translation failed for ${item.title}:`, err.message);
-              mizoTitle = item.title;
-              mizoCaption = item.text;
-              status = 'draft';
-            }
-          }
-
-          // Insert into posts table (INSERT OR IGNORE ensures 0 collision errors)
-          await env.DB.prepare(
-            `INSERT OR IGNORE INTO posts (
-              source_id, source_type, external_id, original_title, original_text,
-              original_url, image_url, mizo_title, mizo_caption, category,
-              status, scheduled_for, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
-          )
-            .bind(
-              item.sourceId,
-              item.sourceType,
-              item.externalId,
-              item.title,
-              item.text,
-              item.url,
-              item.imageUrl || null,
-              mizoTitle || null,
-              mizoCaption || null,
-              item.category,
-              status,
-              scheduledFor
-            )
-            .run();
+          newItems++;
         }
 
         // Update source last_scraped_at
@@ -168,6 +116,90 @@ export class SyncService {
         errors.push(`Error syncing ${source.name}: ${err.message}`);
         console.error(`[SyncService] Source error (${source.name}):`, err);
       }
+    }
+
+    // 4. Step 2: Batch translate all collected candidate items in ONE single API call (saves 90%+ quota!)
+    let batchMap = new Map<string, StorytellerResult>();
+    if (shouldAutoTranslate && candidateItems.length > 0 && (geminiKey || backupKey)) {
+      try {
+        batchMap = await geminiStoryteller.tellStoriesBatch(
+          candidateItems.map((it) => ({
+            id: it.externalId,
+            title: it.title,
+            text: it.text,
+            category: it.category,
+          })),
+          geminiKey,
+          geminiKey2,
+          backupKey
+        );
+      } catch (err: any) {
+        console.warn('[SyncService] Batch translation failed, will fall back to single translations:', err.message);
+      }
+    }
+
+    // 5. Step 3: Insert posts and schedule them in the drip queue
+    for (const item of candidateItems) {
+      let mizoTitle = '';
+      let mizoCaption = '';
+      let status: 'draft' | 'queued' = 'draft';
+      let scheduledFor: string | null = null;
+
+      const batchResult = batchMap.get(item.externalId);
+      if (batchResult && batchResult.mizoCaption.trim()) {
+        mizoTitle = batchResult.mizoTitle || item.title;
+        mizoCaption = batchResult.mizoCaption;
+        status = 'queued';
+        scheduledFor = await queueManager.getNextScheduleTime(env.DB, intervalHours);
+        queued++;
+      } else if (shouldAutoTranslate && (geminiKey || backupKey)) {
+        // Fallback: Translate individually if missed in batch
+        try {
+          const single = await geminiStoryteller.tellStory(
+            item.title,
+            item.text,
+            item.category,
+            geminiKey,
+            geminiKey2,
+            undefined,
+            backupKey
+          );
+          mizoTitle = single.mizoTitle || item.title;
+          mizoCaption = single.mizoCaption;
+          status = 'queued';
+          scheduledFor = await queueManager.getNextScheduleTime(env.DB, intervalHours);
+          queued++;
+        } catch (err: any) {
+          console.warn(`[SyncService] Fallback translation failed for ${item.title}:`, err.message);
+          mizoTitle = item.title;
+          mizoCaption = item.text;
+          status = 'draft';
+        }
+      }
+
+      // Insert into posts table (INSERT OR IGNORE ensures 0 collision errors)
+      await env.DB.prepare(
+        `INSERT OR IGNORE INTO posts (
+          source_id, source_type, external_id, original_title, original_text,
+          original_url, image_url, mizo_title, mizo_caption, category,
+          status, scheduled_for, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`
+      )
+        .bind(
+          item.sourceId,
+          item.sourceType,
+          item.externalId,
+          item.title,
+          item.text,
+          item.url,
+          item.imageUrl || null,
+          mizoTitle || null,
+          mizoCaption || null,
+          item.category,
+          status,
+          scheduledFor
+        )
+        .run();
     }
 
     // Record sync log
